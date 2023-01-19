@@ -7,4 +7,5 @@
 
 chatgpt.api.key 从这里获取 https://beta.openai.com/account/api-keys
 
-![image](https://user-images.githubusercontent.com/12743553/213396855-25560c37-7904-4359-9498-771f8a55b315.png)
+![image](https://user-images.githubusercontent.com/12743553/213402253-912761c0-9ff6-41f4-a247-d9c17f91ff33.png)
+

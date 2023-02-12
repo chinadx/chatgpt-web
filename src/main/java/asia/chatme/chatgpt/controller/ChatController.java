@@ -1,35 +1,74 @@
 package asia.chatme.chatgpt.controller;
 
-import com.alibaba.fastjson.JSON;
-import asia.chatme.chatgpt.dto.Dialog;
+import asia.chatme.chatgpt.dto.DialogDTO;
+import asia.chatme.chatgpt.model.UserSession;
 import asia.chatme.chatgpt.service.ChatService;
+import asia.chatme.chatgpt.service.SessionService;
+import asia.chatme.chatgpt.utils.HttpReqRespUtils;
+import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ChatController {
+    private Logger logger = LoggerFactory.getLogger(Chat2Controller.class);
     @Resource
     private ChatService chatService;
 
+    @Resource
+    private SessionService sessionService;
+
     @GetMapping("/chat")
-    public String chatView(Model model) {
-        model.addAttribute("dialog", new Dialog());
+    public String chatView(Model model,
+                           HttpServletRequest request) {
+        String ip = request.getRemoteAddr();
+        String ua = HttpReqRespUtils.getUserAgent(request);
+        String sessionId = HttpReqRespUtils.extractJSESSIONID(request);
+        //get session
+        UserSession userSession = new UserSession();
+        userSession.setIp(ip);
+        userSession.setUserAgent(ua);
+        userSession.setSessionId(sessionId);
+        userSession.setCreateTime(new Date());
+        logger.info("userSession={}, remoteAddr={}, remoteHost={}, userAgent={}",
+                JSON.toJSONString(userSession), request.getRemoteAddr(), request.getRemoteHost(), request.getHeader("User-Agent"));
+        sessionService.getSessionId(userSession);
+
+        List<DialogDTO> dialogs = chatService.listDialog(sessionId);
+        model.addAttribute("dialogs", dialogs);
         return "chat";
     }
 
-    @PostMapping("/chat")
-    public RedirectView chat(@ModelAttribute("dialog") Dialog dialog, RedirectAttributes redirectAttributes) {
-        final RedirectView redirectView = new RedirectView("/chat", true);
-        Dialog dialogResult = chatService.chat(dialog);
-        System.out.println("dialog=" + JSON.toJSONString(dialogResult));
-        redirectAttributes.addFlashAttribute("result", dialogResult);
-        return redirectView;
+    @PostMapping("/saveData")
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String ask = request.getParameter("ask");
+        // 在这里处理请求，将 data 存入后台数据列表中
+        String ip = request.getRemoteAddr();
+        String ua = HttpReqRespUtils.getUserAgent(request);
+        String sessionId = HttpReqRespUtils.extractJSESSIONID(request);
+        //get session
+        UserSession userSession = new UserSession();
+        userSession.setIp(ip);
+        userSession.setUserAgent(ua);
+        userSession.setSessionId(sessionId);
+        userSession.setCreateTime(new Date());
+        sessionService.getSessionId(userSession);
+        DialogDTO dialog = new DialogDTO();
+        dialog.setAsk(ask);
+        dialog.setSessionId(sessionId);
+        DialogDTO dialogResult = chatService.chat(dialog);
     }
 }

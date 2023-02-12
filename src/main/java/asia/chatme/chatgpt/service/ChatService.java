@@ -1,8 +1,12 @@
 package asia.chatme.chatgpt.service;
 
-import asia.chatme.chatgpt.dto.Dialog;
+import asia.chatme.chatgpt.dto.DialogDTO;
+
+import java.util.List;
 
 public interface ChatService {
 
-    Dialog chat(Dialog input);
+    DialogDTO chat(DialogDTO input);
+
+    List<DialogDTO> listDialog(String sessionId);
 }

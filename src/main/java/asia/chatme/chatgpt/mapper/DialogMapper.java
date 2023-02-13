@@ -22,7 +22,7 @@ public interface DialogMapper {
     @Select("SELECT * FROM dialog WHERE id = #{id}")
     Dialog select(int id);
 
-    @Select("SELECT * FROM dialog")
+    @Select("SELECT * FROM dialog order by create_time desc")
     List<Dialog> selectAll();
 
     @Select("select * from dialog where session_id = #{sessionId} order by create_time desc")

@@ -30,9 +30,47 @@ public class ChatController {
     @Resource
     private SessionService sessionService;
 
+    /**
+     * chat主入口，默认展示当前用户session下的问题，并支持提问
+     */
     @GetMapping("/chat")
     public String chatView(Model model,
                            HttpServletRequest request) {
+        String sessionId = packSessionId(request);
+
+        List<DialogDTO> dialogs = chatService.listDialog(sessionId);
+        model.addAttribute("dialogs", dialogs);
+        return "chat";
+    }
+
+    /**
+     * 提交问题
+     */
+    @PostMapping("/saveData")
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String ask = request.getParameter("ask");
+        // 在这里处理请求，将 data 存入后台数据列表中
+        String sessionId = packSessionId(request);
+        DialogDTO dialog = new DialogDTO();
+        dialog.setAsk(ask);
+        dialog.setSessionId(sessionId);
+        DialogDTO dialogResult = chatService.chat(dialog);
+    }
+
+    /**
+     * 查看所有问题
+     * todo 分页处理
+     */
+    @GetMapping("/monitor")
+    public String monitor(Model model,
+                           HttpServletRequest request) {
+        List<DialogDTO> dialogs = chatService.listDialog(null);
+        model.addAttribute("dialogs", dialogs);
+        return "monitor";
+    }
+
+    private String packSessionId(HttpServletRequest request) {
         String ip = request.getRemoteAddr();
         String ua = HttpReqRespUtils.getUserAgent(request);
         String sessionId = HttpReqRespUtils.extractJSESSIONID(request);
@@ -45,30 +83,6 @@ public class ChatController {
         logger.info("userSession={}, remoteAddr={}, remoteHost={}, userAgent={}",
                 JSON.toJSONString(userSession), request.getRemoteAddr(), request.getRemoteHost(), request.getHeader("User-Agent"));
         sessionService.getSessionId(userSession);
-
-        List<DialogDTO> dialogs = chatService.listDialog(sessionId);
-        model.addAttribute("dialogs", dialogs);
-        return "chat";
-    }
-
-    @PostMapping("/saveData")
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String ask = request.getParameter("ask");
-        // 在这里处理请求，将 data 存入后台数据列表中
-        String ip = request.getRemoteAddr();
-        String ua = HttpReqRespUtils.getUserAgent(request);
-        String sessionId = HttpReqRespUtils.extractJSESSIONID(request);
-        //get session
-        UserSession userSession = new UserSession();
-        userSession.setIp(ip);
-        userSession.setUserAgent(ua);
-        userSession.setSessionId(sessionId);
-        userSession.setCreateTime(new Date());
-        sessionService.getSessionId(userSession);
-        DialogDTO dialog = new DialogDTO();
-        dialog.setAsk(ask);
-        dialog.setSessionId(sessionId);
-        DialogDTO dialogResult = chatService.chat(dialog);
+        return sessionId;
     }
 }

@@ -10,6 +10,7 @@ import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import asia.chatme.chatgpt.service.ChatService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -95,7 +96,12 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<DialogDTO> listDialog(String sessionId) {
-        List<Dialog> dialogs = dialogMapper.selectBySessionId(sessionId);
+        List<Dialog> dialogs = null;
+        if (StringUtils.isBlank(sessionId)) {
+            dialogs = dialogMapper.selectAll();
+        } else {
+            dialogs = dialogMapper.selectBySessionId(sessionId);
+        }
         logger.info("dialogs={}", JSON.toJSONString(dialogs));
         List<DialogDTO> dialogList = new LinkedList<>();
         for (Dialog dialog : dialogs) {

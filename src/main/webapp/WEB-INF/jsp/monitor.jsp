@@ -16,25 +16,66 @@
 
 	<h3>全部用户的问题列表，按提文时间倒序排列</h3>
 	<table border="1">
-		<tr>
-			<th>问题</th>
-			<th>回答</th>
-			<th>时间</th>
-			<th>资源消耗tokens</th>
-		</tr>
-		<%
-			List<DialogDTO> dialogs = (List<DialogDTO>) request.getAttribute("dialogs");
-			for (DialogDTO data : dialogs) {
-		%>
-		<tr>
-			<td><%= data.getAsk() %></td>
-			<td><%= data.getAnswer() %></td>
-			<td><%= data.getCreateTime() %></td>
-			<td><%= data.getTokens() %></td>
-		</tr>
-		<%
-			}
-		%>
-	</table>
+    	<tr>
+    		<th>问题</th>
+    		<th>回答</th>
+    		<th>时间</th>
+    		<th>资源消耗tokens</th>
+    	</tr>
+    	<%
+    		List<DialogDTO> dialogs = (List<DialogDTO>) request.getAttribute("dialogs");
+    		int pageSize = 10;  // 设置每页显示的数据条数
+    		int currentPage = 1; // 设置当前页数，默认为1
+    		if (request.getParameter("page") != null) {
+    			currentPage = Integer.parseInt(request.getParameter("page"));
+    		}
+    		int startIndex = (currentPage - 1) * pageSize;
+    		int endIndex = Math.min(startIndex + pageSize, dialogs.size());
+    		for (int i = startIndex; i < endIndex; i++) {
+    			DialogDTO data = dialogs.get(i);
+    	%>
+    	<tr>
+    		<td><%= data.getAsk() %></td>
+    		<td><%= data.getAnswer() %></td>
+    		<td><%= data.getCreateTime() %></td>
+    		<td><%= data.getTokens() %></td>
+    	</tr>
+    	<%
+    		}
+    	%>
+    </table>
+
+    <style>
+    	.current-page {
+    		background-color: lightblue;
+    		padding: 5px 10px;
+    	}
+    </style>
+
+    <div style="text-align: center;">
+    	<%
+    		int pageCount = (int) Math.ceil(dialogs.size() * 1.0 / pageSize);
+    		if (currentPage > 1) {
+    	%>
+    		<a href="?page=<%= currentPage - 1 %>">上一页</a>
+    	<%
+    		}
+    		for (int i = 1; i <= pageCount; i++) {
+    			String pageClass = "";
+    			if (i == currentPage) {
+    				pageClass = "current-page";
+    			}
+    	%>
+    		<a href="?page=<%= i %>" class="<%= pageClass %>" style="margin: 0 5px;"><%= i %></a>
+    	<%
+    		}
+    		if (currentPage < pageCount) {
+    	%>
+    		<a href="?page=<%= currentPage + 1 %>">下一页</a>
+    	<%
+    		}
+    	%>
+    </div>
+
 </body>
 </html>

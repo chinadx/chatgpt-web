@@ -1,6 +1,7 @@
 package asia.chatme.chatgpt.service.impl;
 
 import asia.chatme.chatgpt.conf.ChatGptConf;
+import asia.chatme.chatgpt.conf.ChatmeContants;
 import asia.chatme.chatgpt.dto.DialogDTO;
 import asia.chatme.chatgpt.dto.GptModel;
 import asia.chatme.chatgpt.mapper.DialogMapper;
@@ -97,7 +98,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public List<DialogDTO> listDialog(String sessionId) {
         List<Dialog> dialogs = null;
-        if (StringUtils.isBlank(sessionId)) {
+        if (ChatmeContants.ALL_SESSION_ID.equals(sessionId)) {
             dialogs = dialogMapper.selectAll();
         } else {
             dialogs = dialogMapper.selectBySessionId(sessionId);

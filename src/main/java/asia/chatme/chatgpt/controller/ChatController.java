@@ -1,5 +1,6 @@
 package asia.chatme.chatgpt.controller;
 
+import asia.chatme.chatgpt.conf.ChatmeContants;
 import asia.chatme.chatgpt.dto.DialogDTO;
 import asia.chatme.chatgpt.model.UserSession;
 import asia.chatme.chatgpt.service.ChatService;
@@ -65,7 +66,7 @@ public class ChatController {
     @GetMapping("/monitor")
     public String monitor(Model model,
                            HttpServletRequest request) {
-        List<DialogDTO> dialogs = chatService.listDialog(null);
+        List<DialogDTO> dialogs = chatService.listDialog(ChatmeContants.ALL_SESSION_ID);
         model.addAttribute("dialogs", dialogs);
         return "monitor";
     }

@@ -1,10 +1,24 @@
+
+body {
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+}
 table {
-    font-family: arial, sans-serif;
     border-collapse: collapse;
 }
+thead tr {
+    font-family: 'SimHei', Arial, sans-serif;
+    font-size:120%;
+}
 
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
+#tips {
+    font-size:70%;
+}
+
+#intro {
+    height: 60px;
+    width: 100%;
+    border: 1px solid green;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

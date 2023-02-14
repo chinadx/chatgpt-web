@@ -1,5 +1,6 @@
 package asia.chatme.chatgpt.dto;
 
+import cn.hutool.core.date.DateUtil;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,7 +12,13 @@ public class DialogDTO {
     private String answer;
     private String user;
     private Date createTime;
+    private String createTimeStr;
     private Integer tokens;
+
+    public String getCreateTimeStr() {
+        return createTime == null ? null
+                : DateUtil.formatDateTime(createTime);
+    }
 
     public static DialogDTO of(String ask, String answer) {
         DialogDTO dialog = new DialogDTO();

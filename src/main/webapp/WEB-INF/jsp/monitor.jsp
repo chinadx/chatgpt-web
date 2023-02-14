@@ -8,20 +8,24 @@
 <head>
     <meta charset="UTF-8">
     <title>ChatMe采蜜</title>
+    <link rel="icon" type="image/x-icon" href="static/img/icon-1.png" />
+    <link rel="stylesheet" type="text/css" href="static/css/common.css">
 </head>
 <body>
-    <div style="height: 60px; width: 100%; border: 1px solid green; display: flex; align-items: center; justify-content: center;">
-      <span>Welcome to ChatMe采蜜  --由ChatGPT提供会话服务</span>
+    <div id="intro">
+          <span>Welcome to ChatMe采蜜  --由OpenAI提供会话服务，基于GPT-3模型</span>
     </div>
 
-	<h3>全部用户的问题列表，按提文时间倒序排列</h3>
+	<h3>全部用户的问题列表，按提问时间倒序排列</h3>
 	<table border="1">
-    	<tr>
-    		<th>问题</th>
-    		<th>回答</th>
-    		<th>时间</th>
-    		<th>资源消耗tokens</th>
-    	</tr>
+	    <thead>
+            <tr>
+                <th>问题</th>
+                <th>回答</th>
+                <th>时间</th>
+                <th>消耗</th>
+            </tr>
+    	</thead>
     	<%
     		List<DialogDTO> dialogs = (List<DialogDTO>) request.getAttribute("dialogs");
     		int pageSize = 10;  // 设置每页显示的数据条数
@@ -37,7 +41,7 @@
     	<tr>
     		<td><%= data.getAsk() %></td>
     		<td><%= data.getAnswer() %></td>
-    		<td><%= data.getCreateTime() %></td>
+    		<td><%= data.getCreateTimeStr() %></td>
     		<td><%= data.getTokens() %></td>
     	</tr>
     	<%
@@ -76,6 +80,7 @@
     		}
     	%>
     </div>
+    <br/><br/>
 
 </body>
 </html>

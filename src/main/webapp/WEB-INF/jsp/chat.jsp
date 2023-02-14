@@ -8,6 +8,9 @@
 <head>
     <meta charset="UTF-8">
     <title>ChatMe采蜜</title>
+    <link rel="icon" type="image/x-icon" href="static/img/icon-1.png" />
+    <link rel="stylesheet" type="text/css" href="static/css/common.css">
+
     <script type="text/javascript">
         function submitData() {
             var inputValue = document.getElementById("inputData").value;
@@ -29,8 +32,8 @@
     </script>
 </head>
 <body>
-    <div style="height: 60px; width: 100%; border: 1px solid green; display: flex; align-items: center; justify-content: center;">
-      <span>Welcome to ChatMe采蜜  --由ChatGPT提供会话服务</span>
+    <div id="intro">
+      <span>Welcome to ChatMe采蜜  --由OpenAI提供会话服务，基于GPT-3模型</span>
     </div>
 
 	<h3>输入您的问题，然后点击右侧提问按钮</h3>
@@ -40,14 +43,16 @@
     </div>
     <h4 style="color:red;">AI回答速度有些慢，请耐心等待...</h3>
 
-	<h3>问题列表，按提文时间倒序排列</h3>
+	<h3>问题列表，按提问时间倒序排列</h3>
 	<table border="1">
-		<tr>
-			<th>问题</th>
-			<th>回答</th>
-			<th>时间</th>
-			<th>资源消耗tokens</th>
-		</tr>
+        <thead>
+            <tr>
+                <th>问题</th>
+                <th>回答</th>
+                <th>时间</th>
+                <th>消耗</th>
+            </tr>
+		</thead>
 		<%
 			List<DialogDTO> dialogs = (List<DialogDTO>) request.getAttribute("dialogs");
 			for (DialogDTO data : dialogs) {
@@ -55,20 +60,27 @@
 		<tr>
 			<td><%= data.getAsk() %></td>
 			<td><%= data.getAnswer() %></td>
-			<td><%= data.getCreateTime() %></td>
+    		<td><%= data.getCreateTimeStr() %></td>
 			<td><%= data.getTokens() %></td>
 		</tr>
 		<%
 			}
 		%>
 	</table>
-	<div>
-        <div> 温馨提示：ChatGPT服务也是收费的，收费标准是：（其中token可以理解为字母，1token大致等于4个字母）</div><br/>
-        <div> Ada模型--0.0004/1K tokens </div><br/>
-        <div> Babbage模型--0.005/1K tokens </div><br/>
-        <div> Curie模型--0.002/1K tokens </div><br/>
-        <div> Davinci模型--0.02/1K tokens </div><br/>
-        <div> 目前是免费试用期内有$18.0元的免费额度，我们用的是Davinci模型，这个模型最贵也最强大，但查询也最慢。请耐心等待以及节省使用 ^-^。</div>
+	<div id="tips">
+	    <div> 温馨提示1：目前ChatGPT尚未开放API访问，采蜜封装的为OpenAI的上一代AI能力即GPT-3，而ChatGPT实际为GPT的第3.5代。但两者的AI能力相差不是很大，只是ChatGPT针对聊天功能做了深度优化。如想体验ChatGPT的完整功能，请访问其官方网站<a href="https://chat.openai.com/chat">ChatGPT</a>，（需科学上网，并选择欧美日韩地区） </div>
+        <br/>
+        <div> 温馨提示2：尽管ChatGPT官网直接向AI提问是免费的，但通过GPT-3的API接口调用需要按调用量收费，收费标准为：$0.02/1K tokens（其中token可以理解为字母，1token大致等于4个字母）</div>
+        <a href = "https://openai.com/api/pricing/">官方价目说明</a>
+        <br/>
+        <div> 目前每个账号免费试用期内有$18.0元的免费额度，请节省使用 ^-^。</div>
     </div>
+    <br/>
+    <div id="tips"> ↓↓↓本账号截至02/14账单，供参考 </div>
+    <div style="text-align: left;">
+    	<img src="static/img/bill.png" alt="截至02/14账单"  style="width: 50%;">
+    </div>
+
+
 </body>
 </html>

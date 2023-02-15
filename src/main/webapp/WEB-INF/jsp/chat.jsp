@@ -67,6 +67,8 @@
 			}
 		%>
 	</table>
+	<br/>
+	<br/>
 	<div id="tips">
 	    <div> 温馨提示1：目前ChatGPT尚未开放API访问，采蜜封装的为OpenAI的上一代AI能力即GPT-3，而ChatGPT实际为GPT的第3.5代。但两者的AI能力相差不是很大，只是ChatGPT针对聊天功能做了深度优化。如想体验ChatGPT的完整功能，请访问其官方网站<a href="https://chat.openai.com/chat">ChatGPT</a>，（需科学上网，并选择欧美日韩地区） </div>
         <br/>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,8 +37,11 @@ public class ChatController {
      */
     @GetMapping("/chat")
     public String chatView(Model model,
-                           HttpServletRequest request) {
-        String sessionId = packSessionId(request);
+                           HttpServletRequest request,
+                           HttpServletResponse response) {
+        String sessionId = packSessionId(request, response);
+
+        logger.info("sessionId={}", sessionId);
 
         List<DialogDTO> dialogs = chatService.listDialog(sessionId);
         model.addAttribute("dialogs", dialogs);
@@ -52,7 +56,7 @@ public class ChatController {
             throws ServletException, IOException {
         String ask = request.getParameter("ask");
         // 在这里处理请求，将 data 存入后台数据列表中
-        String sessionId = packSessionId(request);
+        String sessionId = packSessionId(request, response);
         DialogDTO dialog = new DialogDTO();
         dialog.setAsk(ask);
         dialog.setSessionId(sessionId);
@@ -71,7 +75,7 @@ public class ChatController {
         return "monitor";
     }
 
-    private String packSessionId(HttpServletRequest request) {
+    private String packSessionId(HttpServletRequest request, HttpServletResponse response) {
         String ip = request.getRemoteAddr();
         String ua = HttpReqRespUtils.getUserAgent(request);
         String sessionId = HttpReqRespUtils.extractJSESSIONID(request);
@@ -84,6 +88,12 @@ public class ChatController {
         logger.info("userSession={}, remoteAddr={}, remoteHost={}, userAgent={}",
                 JSON.toJSONString(userSession), request.getRemoteAddr(), request.getRemoteHost(), request.getHeader("User-Agent"));
         sessionService.getSessionId(userSession);
+
+        /** 手动设置cookie失效时间 */
+        Cookie cookie = new Cookie("JSESSIONID", sessionId);
+        cookie.setPath(request.getContextPath()+"/");
+        cookie.setMaxAge(ChatmeContants.COOKIE_MAX_AGE);
+        response.addCookie(cookie);
         return sessionId;
     }
 }

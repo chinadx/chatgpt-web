@@ -12,8 +12,12 @@
     <link rel="stylesheet" type="text/css" href="static/css/common.css">
 </head>
 <body>
+    <div id="image-container">
+      <img src="static/img/bee.png" alt="bee">
+    </div>
+
     <div id="intro">
-          <span>Welcome to ChatMe采蜜  --由OpenAI提供会话服务，基于GPT-3模型</span>
+          <span id="intro1">采蜜 ChatMe</span> &nbsp;&nbsp;&nbsp;&nbsp; <span id="intro2">--由OpenAI提供会话服务，基于GPT-3模型</span>
     </div>
 
 	<h3>全部用户的问题列表，按提问时间倒序排列</h3>

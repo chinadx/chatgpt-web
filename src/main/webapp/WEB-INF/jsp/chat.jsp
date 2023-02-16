@@ -47,13 +47,19 @@
     </script>
 </head>
 <body>
-    <div id="intro">
-      <span>Welcome to ChatMe采蜜  --由OpenAI提供会话服务，基于GPT-3模型</span>
+    <div id="image-container">
+      <img src="static/img/bee.png" alt="bee">
     </div>
 
-	<h3>输入您的问题，然后点击右侧提问按钮</h3>
+    <div id="intro">
+      <span id="intro1">采蜜 ChatMe</span> &nbsp;&nbsp;&nbsp;&nbsp; <span id="intro2">--由OpenAI提供会话服务，基于GPT-3模型</span>
+    </div>
+
+    <br/>
+    <br/>
+
     <div style="display: flex; width: 100%;">
-      <textarea id="inputData" style="flex: 1;"></textarea>
+      <textarea id="inputData" style="flex: 1; border-radius: 10px;"></textarea>
       <input type="button" id="submitBtn" value="提问" onclick="submitData()" style="background-color: navy; color: white;" />
     </div>
     <h4 style="color:red;">AI回答速度有些慢，请耐心等待...</h3>

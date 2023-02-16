@@ -17,8 +17,27 @@ thead tr {
 #intro {
     height: 60px;
     width: 100%;
-    border: 1px solid green;
+    /*border: 1px solid green;*/
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#intro1 {
+    font-size:200%;
+    font-weight:bold;
+}
+#intro2 {
+    font-size:100%;
+}
+
+#image-container {
+  position: relative;
+  height: 0; /* 必须设置高度为0，否则图片可能会挤占文本区域 */
+}
+
+#image-container img {
+  position: absolute;
+  top: 0;
+  right: 0;
 }

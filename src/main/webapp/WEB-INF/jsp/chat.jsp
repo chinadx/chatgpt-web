@@ -29,6 +29,10 @@
             };
             xhr.send("ask=" + inputValue);
         }
+
+        $("a").click(function(){
+            alert('a');
+        })
     </script>
 </head>
 <body>
@@ -52,21 +56,68 @@
                 <th>时间</th>
                 <th>消耗</th>
             </tr>
-		</thead>
-		<%
-			List<DialogDTO> dialogs = (List<DialogDTO>) request.getAttribute("dialogs");
-			for (DialogDTO data : dialogs) {
-		%>
-		<tr>
-			<td><%= data.getAsk() %></td>
-			<td><%= data.getAnswer() %></td>
-    		<td><%= data.getCreateTimeStr() %></td>
-			<td><%= data.getTokens() %></td>
-		</tr>
-		<%
-			}
-		%>
-	</table>
+        </thead>
+        <%
+            List<DialogDTO> dialogs = (List<DialogDTO>) request.getAttribute("dialogs");
+            int pageSize = 10;  // 设置每页显示的数据条数
+            int currentPage = 1; // 设置当前页数，默认为1
+            if (request.getParameter("page") != null) {
+                currentPage = Integer.parseInt(request.getParameter("page"));
+            }
+            int startIndex = (currentPage - 1) * pageSize;
+            int endIndex = Math.min(startIndex + pageSize, dialogs.size());
+            for (int i = startIndex; i < endIndex; i++) {
+                DialogDTO data = dialogs.get(i);
+        %>
+        <tr>
+            <td><%= data.getAsk() %></td>
+            <td><%= data.getAnswer() %></td>
+            <td><%= data.getCreateTimeStr() %></td>
+            <td><%= data.getTokens() %></td>
+        </tr>
+        <%
+            }
+        %>
+    </table>
+
+    <style>
+    	.current-page {
+    		background-color: lightblue;
+    		padding: 5px 10px;
+    	}
+    </style>
+
+    <%
+    //只有页面超过1页时，才展示下面的分页信息
+    if (dialogs.size() > pageSize) {
+    %>
+        <div style="text-align: center;">
+            <%
+                int pageCount = (int) Math.ceil(dialogs.size() * 1.0 / pageSize);
+                if (currentPage > 1) {
+            %>
+                <a href="?page=<%= currentPage - 1 %>">上一页</a>
+            <%
+                }
+                for (int i = 1; i <= pageCount; i++) {
+                    String pageClass = "";
+                    if (i == currentPage) {
+                        pageClass = "current-page";
+                    }
+            %>
+                <a href="?page=<%= i %>" class="<%= pageClass %>" style="margin: 0 5px;"><%= i %></a>
+            <%
+                }
+                if (currentPage < pageCount) {
+            %>
+                <a href="?page=<%= currentPage + 1 %>">下一页</a>
+            <%
+                }
+            %>
+        </div>
+    <%
+    }
+    %>
 	<br/>
 	<br/>
 	<div id="tips">

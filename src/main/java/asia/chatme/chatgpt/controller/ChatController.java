@@ -41,8 +41,6 @@ public class ChatController {
                            HttpServletResponse response) {
         String sessionId = packSessionId(request, response);
 
-        logger.info("sessionId={}", sessionId);
-
         List<DialogDTO> dialogs = chatService.listDialog(sessionId);
         model.addAttribute("dialogs", dialogs);
         return "chat";
@@ -52,7 +50,7 @@ public class ChatController {
      * 提交问题
      */
     @PostMapping("/saveData")
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void saveData(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String ask = request.getParameter("ask");
         // 在这里处理请求，将 data 存入后台数据列表中
@@ -61,6 +59,12 @@ public class ChatController {
         dialog.setAsk(ask);
         dialog.setSessionId(sessionId);
         DialogDTO dialogResult = chatService.chat(dialog);
+    }
+
+    @PostMapping("/deleteData")
+    protected void deleteData(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
     }
 
     /**
@@ -78,7 +82,8 @@ public class ChatController {
     private String packSessionId(HttpServletRequest request, HttpServletResponse response) {
         String ip = request.getRemoteAddr();
         String ua = HttpReqRespUtils.getUserAgent(request);
-        String sessionId = HttpReqRespUtils.extractJSESSIONID(request);
+        String sessionId = HttpReqRespUtils.extractCHATSESSIONID(request);
+        logger.info("----sessionId={}", sessionId);
         //get session
         UserSession userSession = new UserSession();
         userSession.setIp(ip);
@@ -90,7 +95,7 @@ public class ChatController {
         sessionService.getSessionId(userSession);
 
         /** 手动设置cookie失效时间 */
-        Cookie cookie = new Cookie("JSESSIONID", sessionId);
+        Cookie cookie = new Cookie(ChatmeContants.CHAT_SESSION_ID, sessionId);
         cookie.setPath(request.getContextPath()+"/");
         cookie.setMaxAge(ChatmeContants.COOKIE_MAX_AGE);
         response.addCookie(cookie);

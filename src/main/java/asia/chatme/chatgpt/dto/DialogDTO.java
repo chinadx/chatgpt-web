@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Data
 public class DialogDTO {
+    private Integer id;
     private String sessionId;
     private String ask;
     private String answer;

@@ -1,6 +1,7 @@
 package asia.chatme.chatgpt.utils;
 
-import com.alibaba.fastjson.JSON;
+import asia.chatme.chatgpt.conf.ChatmeContants;
+import cn.hutool.core.lang.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -66,16 +67,23 @@ public class HttpReqRespUtils {
         }
     }
 
-    public static String extractJSESSIONID(HttpServletRequest request) {
+    public static String extractCHATSESSIONID(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("JSESSIONID")) {
+                if (cookie.getName().equals(ChatmeContants.CHAT_SESSION_ID)) {
+                    logger.info("------CHAT_SESSION---{}", cookie.getValue());
+                    return cookie.getValue();
+                }
+            }
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(ChatmeContants.JSESSIONID)) {
+                    logger.info("------JSESSIONID---{}", cookie.getValue());
                     return cookie.getValue();
                 }
             }
         }
-        return null;
+        return Md5Util.md5(UUID.fastUUID().toString());
     }
 
     public static String getUserAgent(HttpServletRequest request) {

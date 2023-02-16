@@ -38,6 +38,6 @@ thead tr {
 
 #image-container img {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10;
+  left: 20;
 }

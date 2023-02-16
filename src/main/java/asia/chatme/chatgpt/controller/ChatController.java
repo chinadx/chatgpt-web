@@ -64,7 +64,13 @@ public class ChatController {
     @PostMapping("/deleteData")
     protected void deleteData(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        String id = request.getParameter("id");
+        // 在这里处理请求，将 data 存入后台数据列表中
+        String sessionId = packSessionId(request, response);
+        boolean del = chatService.deleteDialog(sessionId, Integer.valueOf(id));
+        if (!del) {
+            logger.info("del fail, id={},sessionId={}", id, sessionId);
+        }
     }
 
     /**

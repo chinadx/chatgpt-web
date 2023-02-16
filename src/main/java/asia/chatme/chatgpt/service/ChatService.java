@@ -9,4 +9,6 @@ public interface ChatService {
     DialogDTO chat(DialogDTO input);
 
     List<DialogDTO> listDialog(String sessionId);
+
+    Boolean deleteDialog(String sessionId, Integer id);
 }

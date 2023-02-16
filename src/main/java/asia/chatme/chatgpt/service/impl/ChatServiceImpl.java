@@ -113,4 +113,19 @@ public class ChatServiceImpl implements ChatService {
         logger.info("dialogs={}", JSON.toJSONString(dialogList));
         return dialogList;
     }
+
+    @Override
+    public Boolean deleteDialog(String sessionId, Integer id) {
+        //校验权限
+        Dialog dialog = dialogMapper.select(id);
+        if (dialog == null) {
+            return true;
+        }
+        if (StringUtils.compare(sessionId, dialog.getSessionId()) != 0) {
+            logger.info("deleteDialog fail of privilege");
+            return false;
+        }
+        dialogMapper.delete(id);
+        return true;
+    }
 }

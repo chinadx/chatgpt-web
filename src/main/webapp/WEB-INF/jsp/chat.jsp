@@ -30,9 +30,20 @@
             xhr.send("ask=" + inputValue);
         }
 
-        $("a").click(function(){
-            alert('a');
-        })
+        function deleteRow(id, btn) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "deleteData", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState == 4 && xhr.status == 200) {
+                  var row = btn.parentNode.parentNode;
+                  row.parentNode.removeChild(row);
+                  location.reload();
+              }
+            };
+            xhr.send("id=" + id);
+        }
+
     </script>
 </head>
 <body>
@@ -55,6 +66,7 @@
                 <th>回答</th>
                 <th>时间</th>
                 <th>消耗</th>
+                <th>操作</th>
             </tr>
         </thead>
         <%
@@ -74,6 +86,7 @@
             <td><%= data.getAnswer() %></td>
             <td><%= data.getCreateTimeStr() %></td>
             <td><%= data.getTokens() %></td>
+            <td><button onclick="deleteRow(<%= data.getId() %>, this)">删除</button></td>
         </tr>
         <%
             }

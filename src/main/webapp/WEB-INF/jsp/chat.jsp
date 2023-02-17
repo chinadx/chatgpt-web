@@ -153,6 +153,13 @@
     	<img src="static/img/bill.png" alt="截至02/14账单"  style="width: 50%;">
     </div>
 
+    <div style="text-align: center; font-size: 14px;">
+        <p>
+            <a href="https://beian.miit.gov.cn" target="_blank">京ICP备2023002811号</a>
+            | © 2023 采蜜. All rights reserved.
+        </p>
+    </div>
+
 
 </body>
 </html>

@@ -52,7 +52,7 @@
     </div>
 
     <div id="intro">
-      <span id="intro1">采蜜 ChatMe</span> &nbsp;&nbsp;&nbsp;&nbsp; <span id="intro2">--由OpenAI提供会话服务，基于GPT-3模型</span>
+      <span id="intro1">采蜜 ChatMe</span> &nbsp;&nbsp;&nbsp;&nbsp; <span id="intro2">--由OpenAI提供会话服务</span>
     </div>
 
     <br/>
@@ -139,6 +139,20 @@
     %>
 	<br/>
 	<br/>
+
+    <div id="tips">
+    <div>免责声明：</div><br/>
+    <div>欢迎使用采蜜网站提供的ChatGPT人工智能对话能力。请您在使用本网站前仔细阅读以下声明：</div>
+    <div>1.本站提供的ChatGPT人工智能对话能力仅供学习和娱乐使用。任何使用该对话功能进行商业用途的行为，均与本站无关。</div>
+    <div>2.在使用本站提供的对话功能时，请遵守中国相关法律，不要提问任何敏感话题，包括但不限于政治、宗教、色情等。使用者需要为自己的言论负责。</div>
+    <div>3.本站会记录并保存使用者的提问内容，但不会将这些信息透露给任何第三方，除非得到用户授权或法律规定。</div>
+    <div>4.本站提供的对话功能仅由人工智能提供，无法保证回答的准确性、完整性、及时性或适用性，使用者需自行承担使用该功能所造成的风险。</div>
+    <div>5.本站不对因使用该对话功能产生的任何直接、间接、偶然、特殊或后果性损害承担任何责任，包括但不限于因使用该对话功能而造成的利润损失、商业中断、计算机系统崩溃、数据丢失等。</div>
+    <div>6.本站保留随时更新、修改、增加或删除本声明的权利。请您定期访问本站查看最新声明。</div>
+    <div>7.若您继续使用本站提供的对话功能，即表示您已经仔细阅读并同意本声明的所有内容。</div><br/>
+    </div>
+
+	<!--
 	<div id="tips">
 	    <div> 温馨提示1：目前ChatGPT尚未开放API访问，采蜜封装的为OpenAI的上一代AI能力即GPT-3，而ChatGPT实际为GPT的第3.5代。但两者的AI能力相差不是很大，只是ChatGPT针对聊天功能做了深度优化。如想体验ChatGPT的完整功能，请访问其官方网站<a href="https://chat.openai.com/chat">ChatGPT</a>，（需科学上网，并选择欧美日韩地区） </div>
         <br/>
@@ -152,6 +166,8 @@
     <div style="text-align: left;">
     	<img src="static/img/bill.png" alt="截至02/14账单"  style="width: 50%;">
     </div>
+
+    -->
 
     <div style="text-align: center; font-size: 14px;">
         <p>

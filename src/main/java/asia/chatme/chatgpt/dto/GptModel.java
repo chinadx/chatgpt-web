@@ -47,6 +47,7 @@ public class GptModel implements Serializable {
         private String finishReason;
         private Integer index;
         private String text;
+        private GptMessage message;
 
     }
     private String id;

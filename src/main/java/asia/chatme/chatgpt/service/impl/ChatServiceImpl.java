@@ -3,14 +3,18 @@ package asia.chatme.chatgpt.service.impl;
 import asia.chatme.chatgpt.conf.ChatGptConf;
 import asia.chatme.chatgpt.conf.ChatmeContants;
 import asia.chatme.chatgpt.dto.DialogDTO;
+import asia.chatme.chatgpt.dto.GptMessage;
 import asia.chatme.chatgpt.dto.GptModel;
+import asia.chatme.chatgpt.enums.RoleEnum;
 import asia.chatme.chatgpt.mapper.DialogMapper;
 import asia.chatme.chatgpt.model.Dialog;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import asia.chatme.chatgpt.service.ChatService;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,18 +45,28 @@ public class ChatServiceImpl implements ChatService {
         headers.put("Content-Type","application/json;charset=UTF-8");
         logger.info("ask = {}", input.getAsk());
 
+        List<GptMessage> messages = Lists.newArrayList();
+        GptMessage message0 = GptMessage.of(RoleEnum.system.name(), "你是全能AI助理");
+        messages.add(message0);
+
+        GptMessage message1 = GptMessage.of(RoleEnum.user.name(), input.getAsk());
+        messages.add(message1);
+
         JSONObject json = new JSONObject();
         //选择模型
         json.put("model",chatGptConf.getModel());
         //添加我们需要输入的内容
-        json.put("prompt",input.getAsk());
+//        json.put("prompt",input.getAsk());
+        json.put("messages", messages);
         json.put("temperature",chatGptConf.getTemperature());
-        json.put("max_tokens",chatGptConf.getMaxTokens());
-        json.put("top_p",chatGptConf.getTopP());
-        json.put("frequency_penalty",chatGptConf.getFrequencyPenalty());
-        json.put("presence_penalty",chatGptConf.getPresencePenalty());
+//        json.put("max_tokens",chatGptConf.getMaxTokens());
+//        json.put("top_p",chatGptConf.getTopP());
+//        json.put("frequency_penalty",chatGptConf.getFrequencyPenalty());
+//        json.put("presence_penalty",chatGptConf.getPresencePenalty());
 
-        HttpResponse response = HttpRequest.post("https://api.openai.com/v1/completions")
+        logger.info("json={}", JSON.toJSONString(json));
+
+        HttpResponse response = HttpRequest.post("https://api.openai.com/v1/chat/completions")
                 .headerMap(headers, false)
                 .bearerAuth(chatGptConf.getKey())
                 .body(String.valueOf(json))
@@ -63,27 +77,26 @@ public class ChatServiceImpl implements ChatService {
         String body = response.body();
 
 //        String body = "{\n" +
-//                "\t\"id\": \"cmpl-6iaDKHVTkL17zFIDClVWcoNhGZgCm\",\n" +
-//                "\t\"object\": \"text_completion\",\n" +
-//                "\t\"created\": 1676083658,\n" +
-//                "\t\"model\": \"text-davinci-003\",\n" +
-//                "\t\"choices\": [\n" +
-//                "\t\t{\n" +
-//                "\t\t\t\"text\": \"\\n\\nHi there!\",\n" +
-//                "\t\t\t\"index\": 0,\n" +
-//                "\t\t\t\"logprobs\": null,\n" +
-//                "\t\t\t\"finish_reason\": \"stop\"\n" +
-//                "\t\t}\n" +
-//                "\t],\n" +
-//                "\t\"usage\": {\n" +
-//                "\t\t\"prompt_tokens\": 2,\n" +
-//                "\t\t\"completion_tokens\": 5,\n" +
-//                "\t\t\"total_tokens\": 7\n" +
-//                "\t}\n" +
+//                "  \"id\": \"chatcmpl-123\",\n" +
+//                "  \"object\": \"chat.completion\",\n" +
+//                "  \"created\": 1677652288,\n" +
+//                "  \"choices\": [{\n" +
+//                "    \"index\": 0,\n" +
+//                "    \"message\": {\n" +
+//                "      \"role\": \"assistant\",\n" +
+//                "      \"content\": \"\\n\\nHello there, how may I assist you today?\",\n" +
+//                "    },\n" +
+//                "    \"finish_reason\": \"stop\"\n" +
+//                "  }],\n" +
+//                "  \"usage\": {\n" +
+//                "    \"prompt_tokens\": 9,\n" +
+//                "    \"completion_tokens\": 12,\n" +
+//                "    \"total_tokens\": 21\n" +
+//                "  }\n" +
 //                "}\n";
         GptModel model = JSONObject.parseObject(body, GptModel.class);
         logger.info(JSON.toJSONString(model));
-        String text = model.getChoices().get(0).getText().replace("\n","<br/>");
+        String text = model.getChoices().get(0).getMessage().getContent().replace("\n","<br/>");
         DialogDTO dialogDTO = DialogDTO.of(input.getAsk(), text, model.getUsage().getTotalTokens());
 
         Dialog dialog = new Dialog();
@@ -100,6 +113,8 @@ public class ChatServiceImpl implements ChatService {
         List<Dialog> dialogs = null;
         if (ChatmeContants.ALL_SESSION_ID.equals(sessionId)) {
             dialogs = dialogMapper.selectAll();
+        } else if (ChatmeContants.ALL_SESSION_ID_CAN_SEE.equals(sessionId)){
+            dialogs = dialogMapper.selectAllCanSee();
         } else {
             dialogs = dialogMapper.selectBySessionId(sessionId);
         }

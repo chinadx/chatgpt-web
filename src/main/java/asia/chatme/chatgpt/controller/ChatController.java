@@ -35,7 +35,7 @@ public class ChatController {
     /**
      * chat主入口，默认展示当前用户session下的问题，并支持提问
      */
-    @GetMapping("/chat")
+    @GetMapping("/")
     public String chatView(Model model,
                            HttpServletRequest request,
                            HttpServletResponse response) {
@@ -80,6 +80,18 @@ public class ChatController {
     @GetMapping("/monitor")
     public String monitor(Model model,
                            HttpServletRequest request) {
+        List<DialogDTO> dialogs = chatService.listDialog(ChatmeContants.ALL_SESSION_ID_CAN_SEE);
+        model.addAttribute("dialogs", dialogs);
+        return "monitor";
+    }
+
+    /**
+     * 查看所有问题
+     * todo 分页处理
+     */
+    @GetMapping("/all")
+    public String all(Model model,
+                          HttpServletRequest request) {
         List<DialogDTO> dialogs = chatService.listDialog(ChatmeContants.ALL_SESSION_ID);
         model.addAttribute("dialogs", dialogs);
         return "monitor";
